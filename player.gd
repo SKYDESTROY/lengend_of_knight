@@ -1,6 +1,6 @@
 extends CharacterBody2D
 const RUN_SPEED :=100.0
-const JUMP_VELOCITY :=-300.0
+const JUMP_VELOCITY :=-350.0
 var gravity := ProjectSettings.get("physics/2d/default_gravity") as float
 
 @onready var sprite_2d: Sprite2D = $Sprite2D
