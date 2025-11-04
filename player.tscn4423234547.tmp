@@ -199,10 +199,6 @@ libraries = {
 }
 autoplay = "idle"
 
-[node name="airjumptimer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
-
-[node name="jumprequsttimer" type="Timer" parent="."]
+[node name="timer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
