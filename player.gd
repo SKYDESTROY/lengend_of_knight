@@ -18,8 +18,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("jump"):
 		jumprequsttimer.start()
 	#松开跳跃按键时，如果起跳速度大于小跳速度，立即削弱到小跳速度
-	if event.is_action_released("jump") and (-velocity.y) > (-LITTLE_JUMP_VELOCITY):
-		velocity.y = JUMP_VELOCITY/2
+	if event.is_action_released("jump") :
+		#松开跳跃 停止计时器，防止落地预输入自动大跳
+		jumprequsttimer.stop()
+		if(-velocity.y) > (-LITTLE_JUMP_VELOCITY):
+			velocity.y = JUMP_VELOCITY/2
 
 func _physics_process(delta: float) -> void:
 	#自由态横向纵向速度
@@ -42,8 +45,11 @@ func _physics_process(delta: float) -> void:
 			animation_player.play("idle")
 		else:
 			animation_player.play("running")
-	else :
+	elif velocity.y < 0 :
 		animation_player.play("jump")
+	else:
+		animation_player.play("falling")
+		
 	#贴图跟随状态翻转	
 	if not is_zero_approx(direction):
 		sprite_2d.flip_h = direction < 0
