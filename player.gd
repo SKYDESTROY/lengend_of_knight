@@ -169,12 +169,12 @@ func getnextstate(state:State) ->State:
 	return state
 	
 func transitionstate(from:State,to:State) :
-	print("[%s] %s -> %s" %[
-		Engine.get_physics_frames(),
-		State.keys()[from] if from != -1 else "start",
-		State.keys()[to],
-		])
-		
+	#print("[%s] %s -> %s" %[
+		#Engine.get_physics_frames(),
+		#State.keys()[from] if from != -1 else "start",
+		#State.keys()[to],
+		#])
+		#
 	
 	if from not in groundstates and to in groundstates :
 		airjumptimer.stop()

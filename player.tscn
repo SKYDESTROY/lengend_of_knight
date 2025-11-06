@@ -430,6 +430,7 @@ _data = {
 }
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_onrkg")
 
 [node name="graphics" type="Node2D" parent="."]
@@ -458,7 +459,6 @@ deterministic = true
 libraries = {
 &"": SubResource("AnimationLibrary_2hs0m")
 }
-autoplay = "idle"
 
 [node name="airjumptimer" type="Timer" parent="."]
 wait_time = 0.1

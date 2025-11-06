@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://c6oqf028uylpr"]
+[gd_scene load_steps=8 format=4 uid="uid://c6oqf028uylpr"]
 
 [ext_resource type="Script" uid="uid://p0j42rm4arvt" path="res://world.gd" id="1_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_fj7yv"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c82s1bfe0yiki" path="res://resource/Background2.png" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://cm0rqlmbj5kyg" path="res://resource/Background.png" id="5_036b0"]
 [ext_resource type="Texture2D" uid="uid://csqpk45tlvh25" path="res://resource/Tree-Assets.png" id="6_dwbse"]
+[ext_resource type="PackedScene" uid="uid://bm2cbtwidxw71" path="res://boar.tscn" id="7_pkg7o"]
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_tlwt5")
@@ -212,3 +213,6 @@ position = Vector2(582, 189)
 texture = ExtResource("6_dwbse")
 region_enabled = true
 region_rect = Rect2(210, 197, 124, 86)
+
+[node name="boar" parent="." instance=ExtResource("7_pkg7o")]
+position = Vector2(375, 67)
