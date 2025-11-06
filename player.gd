@@ -8,17 +8,21 @@ enum  State {
 	Jump,
 	Falling,
 	Landing,
-	Wallsliding
+	Wallsliding,
+	Walljump
 }
-#利用地面状态判断腾空跳
-const groundstates := [State.Idle,State.Running,State.Landing]
+#利用地面状态判断腾空跳,新增滑墙状态腾空跳
+const groundstates := [State.Idle,State.Running,State.Landing]#State.Wallsliding]
 
 const RUN_SPEED :=130.0
 const FLOOR_ACCELERATION:= RUN_SPEED/0.2
-const AIR_ACCELERATION:= RUN_SPEED/0.02
+const AIR_ACCELERATION:= RUN_SPEED/0.1
 #y轴正方向向下
-const JUMP_VELOCITY :=-360.0
+const JUMP_VELOCITY :=-300.0
+#蹬墙跳有x方向速度
+const WALL_JUMP_VELOCITY :=Vector2(350 ,-250)
 const LITTLE_JUMP_VELOCITY:= JUMP_VELOCITY/2
+#const airgravity := -100
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var isfirsttick := false
 
@@ -33,9 +37,11 @@ var isfirsttick := false
 #手部脚部检测器
 @onready var handcheck: RayCast2D = $graphics/handcheck
 @onready var footcheck: RayCast2D = $graphics/footcheck
+@onready var state_machine: statemachine = $StateMachine
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	#以后判断跳跃按键转为判断跳跃预输入计时器剩余时间
 	if event.is_action_pressed("jump"):
 		jumprequsttimer.start()
 	#松开跳跃按键时，如果起跳速度大于小跳速度，立即削弱到小跳速度
@@ -44,6 +50,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		jumprequsttimer.stop()
 		if(-velocity.y) > (-LITTLE_JUMP_VELOCITY):
 			velocity.y = JUMP_VELOCITY/2
+
+func canwallslide() ->bool:
+	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()
 
 func tickphysics(state:State,delta: float) -> void:
 	match state:
@@ -63,6 +72,17 @@ func tickphysics(state:State,delta: float) -> void:
 			move(defaultgravity/3,delta)	
 			#根据墙面法线翻转滑墙动画
 			graphics.scale.x = -get_wall_normal().x
+			
+		State.Walljump:	
+			if state_machine.statetime < 0.2:
+				#print(str(state_machine.statetime))
+				#velocity.x += airgravity * delta
+				#ngine.time_scale = 0.3
+				stand(0.0 if isfirsttick else defaultgravity/3,delta)
+				graphics.scale.x = get_wall_normal().x
+			else :
+				move(defaultgravity,delta) 
+			
 	isfirsttick = false
 	
 func move(gravity:float,delta: float)	:
@@ -78,10 +98,21 @@ func move(gravity:float,delta: float)	:
 		graphics.scale.x = -1 if direction < 0 else +1
 	move_and_slide()
 	
+func stand(gravity:float,delta: float):
+	
+	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
+	velocity.x = move_toward(velocity.x,0.0,acceleration * delta)
+	velocity.y += gravity * delta
+	#if not is_zero_approx(direction):
+		#graphics.scale.x = -1 if direction < 0 else +1
+	move_and_slide()	
+
+
 	
 func getnextstate(state:State) ->State:
-	var canjump := is_on_floor() or airjumptimer.time_left>0
+	var canjump := is_on_floor() or airjumptimer.time_left>0 #and not is_on_wall()
 	var shouldjump := canjump and jumprequsttimer.time_left>0 
+	
 	if shouldjump:
 		return State.Jump
 		
@@ -93,37 +124,58 @@ func getnextstate(state:State) ->State:
 		State.Idle:
 			if not isstill:
 				return State.Running
+				
 		State.Running:
 			if isstill:
 				return State.Idle
 			if not is_on_floor():
 				return State.Falling
+				
 		State.Jump:
 			if velocity.y > 0:
 				return State.Falling
+				
 		State.Falling:			
 			if is_on_floor() :
 				if isstill:
 					return State.Landing
 				else :
 					return State.Running
-			#不仅在墙上，手部脚部也需要触墙
-			if is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding():
+			#不仅在墙上，手部脚部探测器也需要触墙
+			if canwallslide():
 				return State.Wallsliding
+				
 		State.Landing:
 			if not isstill:
 				return State.Running
+			#着陆动画播放完毕
 			if not animation_player.is_playing():
 				return State.Idle
+				
 		State.Wallsliding:
+			if not isfirsttick and jumprequsttimer.time_left > 0:
+				return State.Walljump
 			if is_on_floor():
 				return State.Idle
 			if not is_on_wall():
+				return State.Falling
+				
+		State.Walljump:
+			if not isfirsttick and canwallslide():
+				return State.Wallsliding
+			if velocity.y >= 0:
 				return State.Falling
 	
 	return state
 	
 func transitionstate(from:State,to:State) :
+	print("[%s] %s -> %s" %[
+		Engine.get_physics_frames(),
+		State.keys()[from] if from != -1 else "start",
+		State.keys()[to],
+		])
+		
+	
 	if from not in groundstates and to in groundstates :
 		airjumptimer.stop()
 		
@@ -131,27 +183,43 @@ func transitionstate(from:State,to:State) :
 		State.Idle:
 			animation_player.play("idle")
 			$statedebug.text=str("idle")
+			
 		State.Running:
 			animation_player.play("running")
 			$statedebug.text=str("running")
+			
 		State.Jump:
 			animation_player.play("jump")
 			$statedebug.text=str("jump")
-			
 			velocity.y = JUMP_VELOCITY
+			#进入跳跃状态清除跳跃预输入和腾空跳条件，防止剩余时间影响其他状态判断
 			airjumptimer.stop()
-			jumprequsttimer.stop()			
+			jumprequsttimer.stop()
+				
 		State.Falling:
 			animation_player.play("falling")
 			$statedebug.text=str("falling")
+			#从地面状态转为下落，启动腾空跳条件
 			if from in groundstates:
 				airjumptimer.start()
+				
 		State.Landing:
 			animation_player.play("landing")
-			$statedebug.text=str("landing")		
+			$statedebug.text=str("landing")	
+				
 		State.Wallsliding:
 			#重置重力影响，触墙无初速度
 			velocity.y = 0
 			animation_player.play("wallsliding")
-			$statedebug.text=str("wallsliding")	
+			$statedebug.text=str("wallsliding")
+			
+		State.Walljump:
+			animation_player.play("jump")
+			$statedebug.text=str("walljump")
+			velocity.x = get_wall_normal().x * WALL_JUMP_VELOCITY.x
+			velocity.y = WALL_JUMP_VELOCITY.y
+			#进入跳跃状态清除跳跃预输入和腾空跳条件，防止剩余时间影响其他状态判断
+			#airjumptimer.stop()
+			jumprequsttimer.stop()
+			
 	isfirsttick =true
