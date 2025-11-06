@@ -1,5 +1,5 @@
 #animationplayer.deterministic:没有关键帧的轨道默认使用reset轨道，避免动画轨道数量不同的影响
-
+class_name Player
 extends CharacterBody2D
 
 enum  State {
@@ -9,10 +9,12 @@ enum  State {
 	Falling,
 	Landing,
 	Wallsliding,
-	Walljump
+	Walljump,
+	Attack1,Attack2,Attack3,
 }
 #利用地面状态判断腾空跳,新增滑墙状态腾空跳
-const groundstates := [State.Idle,State.Running,State.Landing]#State.Wallsliding]
+const groundstates := [State.Idle,State.Running,State.Landing,
+	State.Attack1,State.Attack2,State.Attack3]#State.Wallsliding]
 
 const RUN_SPEED :=130.0
 const FLOOR_ACCELERATION:= RUN_SPEED/0.2
@@ -23,9 +25,12 @@ const JUMP_VELOCITY :=-300.0
 const WALL_JUMP_VELOCITY :=Vector2(350 ,-250)
 const LITTLE_JUMP_VELOCITY:= JUMP_VELOCITY/2
 #const airgravity := -100
+
+@export var cancombo := false
+
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var isfirsttick := false
-
+var iscomborequest := false
 #预输入跳跃，接触地面立即无延迟跳跃
 @onready var jumprequsttimer: Timer = $jumprequsttimer
 #预输入悬崖腾空跳跃，离开悬崖短时间仍可跳跃
@@ -37,7 +42,7 @@ var isfirsttick := false
 #手部脚部检测器
 @onready var handcheck: RayCast2D = $graphics/handcheck
 @onready var footcheck: RayCast2D = $graphics/footcheck
-@onready var state_machine: statemachine = $StateMachine
+@onready var state_machine: Statemachine = $StateMachine
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -50,9 +55,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		jumprequsttimer.stop()
 		if(-velocity.y) > (-LITTLE_JUMP_VELOCITY):
 			velocity.y = JUMP_VELOCITY/2
+	if event.is_action_pressed("attack") and cancombo:
+		iscomborequest = true
 
 func canwallslide() ->bool:
 	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()
+
+ 
 
 func tickphysics(state:State,delta: float) -> void:
 	match state:
@@ -82,6 +91,8 @@ func tickphysics(state:State,delta: float) -> void:
 				graphics.scale.x = get_wall_normal().x
 			else :
 				move(defaultgravity,delta) 
+		State.Attack1,State.Attack2,State.Attack3:
+			stand(defaultgravity,delta)
 			
 	isfirsttick = false
 	
@@ -115,6 +126,9 @@ func getnextstate(state:State) ->State:
 	
 	if shouldjump:
 		return State.Jump
+	
+	if state in groundstates and not is_on_floor():
+		return State.Falling
 		
 	var direction :=Input.get_axis("move_left","move_right")
 	#地面静止站立状态
@@ -124,13 +138,13 @@ func getnextstate(state:State) ->State:
 		State.Idle:
 			if not isstill:
 				return State.Running
-				
+			if Input.is_action_just_pressed("attack")	:
+				return State.Attack1
 		State.Running:
 			if isstill:
 				return State.Idle
-			if not is_on_floor():
-				return State.Falling
-				
+			if Input.is_action_just_pressed("attack")	:
+				return State.Attack1
 		State.Jump:
 			if velocity.y > 0:
 				return State.Falling
@@ -144,7 +158,7 @@ func getnextstate(state:State) ->State:
 			#不仅在墙上，手部脚部探测器也需要触墙
 			if canwallslide():
 				return State.Wallsliding
-				
+								
 		State.Landing:
 			if not isstill:
 				return State.Running
@@ -165,7 +179,15 @@ func getnextstate(state:State) ->State:
 				return State.Wallsliding
 			if velocity.y >= 0:
 				return State.Falling
-	
+		State.Attack1:
+			if not animation_player.is_playing():
+				return State.Attack2 if iscomborequest else State.Idle
+		State.Attack2:
+			if not animation_player.is_playing():
+				return State.Attack3 if iscomborequest else State.Idle
+		State.Attack3:
+			if not animation_player.is_playing():
+				return State.Idle
 	return state
 	
 func transitionstate(from:State,to:State) :
@@ -221,5 +243,16 @@ func transitionstate(from:State,to:State) :
 			#进入跳跃状态清除跳跃预输入和腾空跳条件，防止剩余时间影响其他状态判断
 			#airjumptimer.stop()
 			jumprequsttimer.stop()
-			
+		State.Attack1:
+			animation_player.play("attack1")
+			$statedebug.text = str("A1")
+			iscomborequest = false
+		State.Attack2:
+			animation_player.play("attack2")
+			$statedebug.text = str("A2")
+			iscomborequest = false
+		State.Attack3:
+			animation_player.play("attack3")
+			$statedebug.text = str("A3")	
+			iscomborequest = false	
 	isfirsttick =true

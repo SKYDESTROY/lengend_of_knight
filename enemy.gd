@@ -10,9 +10,9 @@ enum Direction{
 
 @onready var graphics: Node2D = $Graphics
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var statemachine: statemachine = $statemachine
+@onready var statemachine: Statemachine = $statemachine
 
-@export var direction  := Direction.LEFT :
+@export var direction := Direction.LEFT :
 	set(v):
 		direction = v
 		if not is_node_ready():
