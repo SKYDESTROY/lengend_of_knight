@@ -216,6 +216,3 @@ region_rect = Rect2(210, 197, 124, 86)
 
 [node name="boar" parent="." instance=ExtResource("7_pkg7o")]
 position = Vector2(375, 67)
-direction = null
-maxspeed = null
-acceleration = null

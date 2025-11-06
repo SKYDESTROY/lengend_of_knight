@@ -256,3 +256,7 @@ func transitionstate(from:State,to:State) :
 			$statedebug.text = str("A3")	
 			iscomborequest = false	
 	isfirsttick =true
+
+
+func _on_hurtbox_hurt(hitbox: Hitbox) -> void:
+	pass # Replace with function body.

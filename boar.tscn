@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bm2cbtwidxw71"]
+[gd_scene load_steps=16 format=3 uid="uid://bm2cbtwidxw71"]
 
 [ext_resource type="PackedScene" uid="uid://b40tsd7kdcgyt" path="res://enemy.tscn" id="1_4ov56"]
 [ext_resource type="Texture2D" uid="uid://bappus0lm32wr" path="res://resource/boar/Idle-Sheet.png" id="2_d1qa8"]
@@ -6,6 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://bjt56ybndqhsi" path="res://resource/boar/Run-Sheet.png" id="3_5v2dv"]
 [ext_resource type="Texture2D" uid="uid://bsrcwjiwbqmpk" path="res://resource/boar/Walk-Base-Sheet.png" id="4_u1bis"]
 [ext_resource type="Texture2D" uid="uid://c44u4d7y1tb0e" path="res://resource/boar/Hit-Sheet.png" id="5_u1bis"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xcsty"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mc8l0"]
+size = Vector2(33.25, 7)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u1bis"]
 radius = 11.0
@@ -309,6 +314,22 @@ position = Vector2(-11, -14)
 target_position = Vector2(-75, 0)
 collision_mask = 3
 
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Graphics/Hitbox" index="0"]
+position = Vector2(-1.5, -11.5)
+shape = SubResource("RectangleShape2D_xcsty")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Graphics/Hitbox" index="1"]
+position = Vector2(-1.625, -9)
+shape = SubResource("RectangleShape2D_mc8l0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Graphics/Hurtbox" index="0"]
+position = Vector2(-1.5, -11.5)
+shape = SubResource("RectangleShape2D_xcsty")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Graphics/Hurtbox" index="1"]
+position = Vector2(-1.625, -9)
+shape = SubResource("RectangleShape2D_mc8l0")
+
 [node name="CollisionShape2D" parent="." index="1"]
 position = Vector2(0, -11)
 shape = SubResource("CircleShape2D_u1bis")
@@ -340,3 +361,5 @@ text = "0"
 horizontal_alignment = 1
 vertical_alignment = 1
 metadata/_edit_use_anchors_ = true
+
+[connection signal="hurt" from="Graphics/Hurtbox" to="." method="_on_hurtbox_hurt"]

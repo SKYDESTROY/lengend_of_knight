@@ -75,3 +75,7 @@ func transitionstate(from:State,to:State) :
 				floorcheck.force_raycast_update()
 			animation_player.play("walk")
 			$statedebug.text=str("walk")
+
+
+func _on_hurtbox_hurt(hitbox: Hitbox) -> void:
+	pass # Replace with function body.
