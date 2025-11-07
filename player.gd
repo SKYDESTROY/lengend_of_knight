@@ -16,7 +16,7 @@ enum  State {
 }
 #利用地面状态判断腾空跳,新增滑墙状态腾空跳
 const groundstates := [State.Idle,State.Running,State.Landing,
-	State.Attack1,State.Attack2,State.Attack3]#State.Wallsliding]
+	State.Attack1,State.Attack2,State.Attack3]#墙上预输入跳以后可加入State.Wallsliding]
 
 const RUN_SPEED :=130.0
 const FLOOR_ACCELERATION:= RUN_SPEED/0.2
@@ -40,6 +40,7 @@ var isfirsttick := false
 var iscomborequest := false
 var pendingdamage:Damage
 var fallfromy :float
+var interactablewith : Array[Interactable]
 #预输入跳跃，接触地面立即无延迟跳跃
 @onready var jumprequsttimer: Timer = $jumprequsttimer
 #预输入悬崖腾空跳跃，离开悬崖短时间仍可跳跃
@@ -54,9 +55,13 @@ var fallfromy :float
 @onready var state_machine: Statemachine = $StateMachine
 @onready var invincibletimer: Timer = $invincibletimer
 @onready var slidingrequsttimer: Timer = $slidingrequsttimer
+@onready var interaction_icon: AnimatedSprite2D = $interactionIcon
+
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("interact") and interactablewith:
+		interactablewith.back().interact()
 	#以后判断跳跃按键转为判断跳跃预输入计时器剩余时间
 	if event.is_action_pressed("jump"):
 		jumprequsttimer.start()
@@ -73,6 +78,7 @@ func _unhandled_input(event: InputEvent) -> void:
 #贴墙和手部脚部射线检测都通过才允许滑墙，防止空气爬
 func canwallslide() ->bool:
 	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()
+#预输入滑步,是否有能量
 func shouldsliding()->bool:
 	if slidingrequsttimer.is_stopped():
 		return false
@@ -82,8 +88,20 @@ func shouldsliding()->bool:
 #死亡重新加载场景，使用die动画里的方法关键帧触发
 func die()->void:
 	get_tree().reload_current_scene()
-
+#加入交互组	
+func register_interactable(v:Interactable):
+	if state_machine.currentstate == State.Die:
+		return
+	if v in interactablewith:
+		return
+	interactablewith.append(v)
+#从交互组移除	
+func unregister_interactable(v:Interactable) ->void:
+	interactablewith.erase(v)
+	
 func tickphysics(state:State,delta: float) -> void:
+	#显示交互按钮
+	interaction_icon.visible = not interactablewith.is_empty()
 	#无敌闪烁，调整alpha通道,在0~1之间正弦变化
 	if invincibletimer.time_left > 0:
 		graphics.modulate.a = sin(Time.get_ticks_msec()/20) * 0.5 + 0.5
@@ -319,6 +337,8 @@ func transitionstate(from:State,to:State) :
 			$statedebug.text=str("die")	
 			#死亡动画不必闪烁
 			invincibletimer.stop()
+			#死亡清空交互组
+			interactablewith.clear()
 		State.Slidingstart:
 			animation_player.play("slidingstart")
 			slidingrequsttimer.stop()

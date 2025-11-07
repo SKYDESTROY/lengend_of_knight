@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=4 uid="uid://c6oqf028uylpr"]
+[gd_scene load_steps=10 format=4 uid="uid://c6oqf028uylpr"]
 
 [ext_resource type="Script" uid="uid://p0j42rm4arvt" path="res://world.gd" id="1_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_fj7yv"]
@@ -7,6 +7,10 @@
 [ext_resource type="Texture2D" uid="uid://cm0rqlmbj5kyg" path="res://resource/Background.png" id="5_036b0"]
 [ext_resource type="Texture2D" uid="uid://csqpk45tlvh25" path="res://resource/Tree-Assets.png" id="6_dwbse"]
 [ext_resource type="PackedScene" uid="uid://bm2cbtwidxw71" path="res://boar.tscn" id="7_pkg7o"]
+[ext_resource type="Script" uid="uid://c6rstj8j6tbk5" path="res://Interactble.gd" id="8_gbfbk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ioo17"]
+size = Vector2(20, 22)
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_tlwt5")
@@ -216,3 +220,12 @@ region_rect = Rect2(210, 197, 124, 86)
 
 [node name="boar" parent="." instance=ExtResource("7_pkg7o")]
 position = Vector2(478, 134)
+
+[node name="Interactable" type="Area2D" parent="."]
+position = Vector2(252, 86)
+script = ExtResource("8_gbfbk")
+metadata/_custom_type_script = "uid://c6rstj8j6tbk5"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactable"]
+position = Vector2(-44, 10)
+shape = SubResource("RectangleShape2D_ioo17")

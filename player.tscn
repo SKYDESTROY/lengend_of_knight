@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bt7ndu4u47x2y"]
+[gd_scene load_steps=36 format=3 uid="uid://bt7ndu4u47x2y"]
 
 [ext_resource type="Texture2D" uid="uid://cuxbcd3oyu4cy" path="res://resource/char_blue_1.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cbidnvopow6jg" path="res://player.gd" id="1_onrkg"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dws70ksigquq3" path="res://hitbox.gd" id="4_2hs0m"]
 [ext_resource type="Script" uid="uid://dsye2271dmflt" path="res://States.gd" id="6_1jxqw"]
 [ext_resource type="PackedScene" uid="uid://b150gx7g836s4" path="res://UI/status_panel.tscn" id="8_dw050"]
+[ext_resource type="Texture2D" uid="uid://dyn646oebrk5d" path="res://resource/gdb-keyboard-2.png" id="9_b26j0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
 size = Vector2(12, 29)
@@ -815,75 +816,9 @@ tracks/3/keys = {
 "values": [ExtResource("1_4flbx")]
 }
 
-[sub_resource type="Animation" id="Animation_1jxqw"]
-resource_name = "wallsliding"
-length = 0.4
-loop_mode = 1
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("graphics/Sprite2D:region_rect")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Rect2(0, 168, 224, 56)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("graphics/Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [4]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("graphics/Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.099999994, 0.19999999, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("graphics/Sprite2D:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(-7, -25)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("graphics/Sprite2D:texture")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("2_i3pqv")]
-}
-
-[sub_resource type="Animation" id="Animation_urp6f"]
-resource_name = "slidingstart"
-length = 0.15
+[sub_resource type="Animation" id="Animation_606se"]
+resource_name = "slidingend"
+length = 0.1
 step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -895,7 +830,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Rect2(0, 112, 168, 56)]
+"values": [Rect2(336, 112, 112, 56)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -904,7 +839,7 @@ tracks/1/path = NodePath("graphics/Sprite2D:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.15),
+"times": PackedFloat32Array(0, 0.1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [ExtResource("2_i3pqv"), ExtResource("2_i3pqv")]
@@ -919,7 +854,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [3]
+"values": [2]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -928,10 +863,10 @@ tracks/3/path = NodePath("graphics/Sprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.1),
-"transitions": PackedFloat32Array(1, 1, 1),
+"times": PackedFloat32Array(0, 0.05),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [0, 1, 2]
+"values": [0, 1]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -940,10 +875,10 @@ tracks/4/path = NodePath("graphics/Hurtbox:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.15),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [false, true]
+"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_bwjto"]
@@ -1012,9 +947,9 @@ tracks/4/keys = {
 "values": [false]
 }
 
-[sub_resource type="Animation" id="Animation_606se"]
-resource_name = "slidingend"
-length = 0.1
+[sub_resource type="Animation" id="Animation_urp6f"]
+resource_name = "slidingstart"
+length = 0.15
 step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1026,7 +961,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Rect2(336, 112, 112, 56)]
+"values": [Rect2(0, 112, 168, 56)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1035,7 +970,7 @@ tracks/1/path = NodePath("graphics/Sprite2D:texture")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.1),
+"times": PackedFloat32Array(0, 0.15),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [ExtResource("2_i3pqv"), ExtResource("2_i3pqv")]
@@ -1050,7 +985,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [2]
+"values": [3]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1059,10 +994,10 @@ tracks/3/path = NodePath("graphics/Sprite2D:frame")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.05),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.05, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [0, 1]
+"values": [0, 1, 2]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -1071,10 +1006,76 @@ tracks/4/path = NodePath("graphics/Hurtbox:monitorable")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_1jxqw"]
+resource_name = "wallsliding"
+length = 0.4
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("graphics/Sprite2D:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(0, 168, 224, 56)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("graphics/Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("graphics/Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.099999994, 0.19999999, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("graphics/Sprite2D:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-7, -25)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("graphics/Sprite2D:texture")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_i3pqv")]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2hs0m"]
@@ -1095,6 +1096,42 @@ _data = {
 &"slidingstart": SubResource("Animation_urp6f"),
 &"wallsliding": SubResource("Animation_1jxqw")
 }
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7ghd"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvl01"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 160, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ivps1"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 272, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urp6f"]
+atlas = ExtResource("9_b26j0")
+region = Rect2(96, 384, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_bwjto"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7ghd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvl01")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ivps1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urp6f")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
@@ -1208,5 +1245,11 @@ offset_top = 4.0
 offset_right = 92.0
 offset_bottom = 30.0
 states = NodePath("../../AnimationPlayer/States")
+
+[node name="interactionIcon" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -53)
+sprite_frames = SubResource("SpriteFrames_bwjto")
+frame = 2
+frame_progress = 0.37907013
 
 [connection signal="hurt" from="graphics/Hurtbox" to="." method="_on_hurtbox_hurt"]
