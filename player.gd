@@ -11,7 +11,8 @@ enum  State {
 	Wallsliding,
 	Walljump,
 	Attack1,Attack2,Attack3,
-	Hurt,Die
+	Hurt,Die,
+	Slidingstart,Slidingloop,Slidingend
 }
 #利用地面状态判断腾空跳,新增滑墙状态腾空跳
 const groundstates := [State.Idle,State.Running,State.Landing,
@@ -26,13 +27,19 @@ const JUMP_VELOCITY :=-300.0
 const WALL_JUMP_VELOCITY :=Vector2(350 ,-250)
 const LITTLE_JUMP_VELOCITY:= JUMP_VELOCITY/2
 #const airgravity := -100
-
+const SLIDING_DURATION = 0.3
+const SLIDINGSPEED = 250.0
+const SLIDINGENERGY = 4.0
 @export var cancombo := false
-const  KNOCKBACKAMOUNT := 300
+const  KNOCKBACKAMOUNT := 300.0
+const LANDINGHEIGHT :=100.0
+
+
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var isfirsttick := false
 var iscomborequest := false
 var pendingdamage:Damage
+var fallfromy :float
 #预输入跳跃，接触地面立即无延迟跳跃
 @onready var jumprequsttimer: Timer = $jumprequsttimer
 #预输入悬崖腾空跳跃，离开悬崖短时间仍可跳跃
@@ -46,12 +53,15 @@ var pendingdamage:Damage
 @onready var footcheck: RayCast2D = $graphics/footcheck
 @onready var state_machine: Statemachine = $StateMachine
 @onready var invincibletimer: Timer = $invincibletimer
+@onready var slidingrequsttimer: Timer = $slidingrequsttimer
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	#以后判断跳跃按键转为判断跳跃预输入计时器剩余时间
 	if event.is_action_pressed("jump"):
 		jumprequsttimer.start()
+	if event.is_action_pressed("sliding"):
+		slidingrequsttimer.start()
 	#松开跳跃按键时，如果起跳速度大于小跳速度，立即削弱到小跳速度
 	if event.is_action_released("jump") :
 		#松开跳跃 停止计时器，防止落地预输入自动大跳
@@ -63,7 +73,12 @@ func _unhandled_input(event: InputEvent) -> void:
 #贴墙和手部脚部射线检测都通过才允许滑墙，防止空气爬
 func canwallslide() ->bool:
 	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()
-
+func shouldsliding()->bool:
+	if slidingrequsttimer.is_stopped():
+		return false
+	if states.energy < SLIDINGENERGY:
+		return false
+	return not footcheck.is_colliding()
 #死亡重新加载场景，使用die动画里的方法关键帧触发
 func die()->void:
 	get_tree().reload_current_scene()
@@ -103,8 +118,10 @@ func tickphysics(state:State,delta: float) -> void:
 				move(defaultgravity,delta) 
 		State.Attack1,State.Attack2,State.Attack3:
 			stand(defaultgravity,delta)
-		State.Hurt,State.Die:
+		State.Hurt,State.Die,State.Slidingend:
 			stand(defaultgravity,delta)
+		State.Slidingstart,State.Slidingloop:
+			slide(delta)
 			
 	isfirsttick = false
 	
@@ -115,7 +132,6 @@ func move(gravity:float,delta: float)	:
 	#地面缓慢加速,空中迅速加速
 	velocity.x = move_toward(velocity.x,direction* RUN_SPEED,acceleration * delta)
 	velocity.y += gravity * delta
-
 	#贴图跟随状态翻转	
 	if not is_zero_approx(direction):
 		graphics.scale.x = -1 if direction < 0 else +1
@@ -125,6 +141,10 @@ func stand(gravity:float,delta: float):
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	velocity.x = move_toward(velocity.x,0.0,acceleration * delta)
 	velocity.y += gravity * delta
+	move_and_slide()	
+func slide(delta:float):
+	velocity.x = graphics.scale.x * SLIDINGSPEED
+	velocity.y += defaultgravity * delta
 	move_and_slide()	
 
 func getnextstate(state:State) ->int:
@@ -151,18 +171,24 @@ func getnextstate(state:State) ->int:
 				return State.Running
 			if Input.is_action_just_pressed("attack")	:
 				return State.Attack1
+			if shouldsliding():
+				return State.Slidingstart
 		State.Running:
 			if isstill:
 				return State.Idle
 			if Input.is_action_just_pressed("attack")	:
 				return State.Attack1
+			if shouldsliding():
+				return State.Slidingstart
 		State.Jump:
 			if velocity.y > 0:
 				return State.Falling
 				
 		State.Falling:			
 			if is_on_floor() :
-				if isstill:
+				var height := global_position.y - fallfromy
+				#把Landing动作变为高坠落惩罚
+				if height >= LANDINGHEIGHT:
 					return State.Landing
 				else :
 					return State.Running
@@ -171,8 +197,6 @@ func getnextstate(state:State) ->int:
 				return State.Wallsliding
 								
 		State.Landing:
-			if not isstill:
-				return State.Running
 			#着陆动画播放完毕
 			if not animation_player.is_playing():
 				return State.Idle
@@ -202,6 +226,17 @@ func getnextstate(state:State) ->int:
 		State.Hurt:
 			if not animation_player.is_playing():
 				return State.Idle
+		State.Slidingstart:
+			if not animation_player.is_playing():
+				return State.Slidingloop
+		State.Slidingend:
+			if not animation_player.is_playing():
+				return State.Idle		
+		State.Slidingloop:
+			if is_on_wall():
+				return State.Idle
+			if state_machine.statetime > SLIDING_DURATION:
+				return State.Slidingend
 	return state_machine.KEEP_CURRENT
 	
 func transitionstate(from:State,to:State) :
@@ -238,7 +273,7 @@ func transitionstate(from:State,to:State) :
 			#从地面状态转为下落，启动腾空跳条件
 			if from in groundstates:
 				airjumptimer.start()
-				
+			fallfromy = global_position.y	
 		State.Landing:
 			animation_player.play("landing")
 			$statedebug.text=str("landing")	
@@ -284,8 +319,17 @@ func transitionstate(from:State,to:State) :
 			$statedebug.text=str("die")	
 			#死亡动画不必闪烁
 			invincibletimer.stop()
-			
-		
+		State.Slidingstart:
+			animation_player.play("slidingstart")
+			slidingrequsttimer.stop()
+			states.energy -= SLIDINGENERGY
+			$statedebug.text=str("slidingstart")		
+		State.Slidingloop:
+			animation_player.play("slidingloop")
+			$statedebug.text=str("slidingloop")	
+		State.Slidingend:
+			animation_player.play("slidingend")
+			$statedebug.text=str("slidingend")		
 	isfirsttick =true
 
 
