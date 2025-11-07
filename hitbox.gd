@@ -1,5 +1,6 @@
 class_name Hitbox
 extends Area2D
+#所有的伤害箱都可用
 #hitbox找hurtbox
 signal  hit(hurtbox)
 
@@ -12,8 +13,8 @@ func _init():
 	area_entered.connect(_on_area_entered)
 
 func  _on_area_entered(hurtbox:Hurtbox) -> void:
-	print("[hit]%s->%s" % [owner.name,hurtbox.owner.name])
-	
+	#调试伤害双方对象
+	print("[hit]%s->%s" % [owner.name,hurtbox.owner.name])	
 	hit.emit(hurtbox)
 	hurtbox.hurt.emit(self)
 	

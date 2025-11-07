@@ -11,6 +11,7 @@ enum  State {
 	Wallsliding,
 	Walljump,
 	Attack1,Attack2,Attack3,
+	Hurt,Die
 }
 #利用地面状态判断腾空跳,新增滑墙状态腾空跳
 const groundstates := [State.Idle,State.Running,State.Landing,
@@ -27,22 +28,24 @@ const LITTLE_JUMP_VELOCITY:= JUMP_VELOCITY/2
 #const airgravity := -100
 
 @export var cancombo := false
-
+const  KNOCKBACKAMOUNT := 300
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var isfirsttick := false
 var iscomborequest := false
+var pendingdamage:Damage
 #预输入跳跃，接触地面立即无延迟跳跃
 @onready var jumprequsttimer: Timer = $jumprequsttimer
 #预输入悬崖腾空跳跃，离开悬崖短时间仍可跳跃
 @onready var airjumptimer: Timer = $airjumptimer
 #动画flip_h被爬墙动画占用，借用父节点的scale模拟flip_h进行翻转动画
 @onready var graphics: Node2D = $graphics
-
+@onready var states: States = $AnimationPlayer/States
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 #手部脚部检测器
 @onready var handcheck: RayCast2D = $graphics/handcheck
 @onready var footcheck: RayCast2D = $graphics/footcheck
 @onready var state_machine: Statemachine = $StateMachine
+@onready var invincibletimer: Timer = $invincibletimer
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -57,13 +60,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			velocity.y = JUMP_VELOCITY/2
 	if event.is_action_pressed("attack") and cancombo:
 		iscomborequest = true
-
+#贴墙和手部脚部射线检测都通过才允许滑墙，防止空气爬
 func canwallslide() ->bool:
 	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()
 
- 
+#死亡重新加载场景，使用die动画里的方法关键帧触发
+func die()->void:
+	get_tree().reload_current_scene()
 
 func tickphysics(state:State,delta: float) -> void:
+	#无敌闪烁，调整alpha通道,在0~1之间正弦变化
+	if invincibletimer.time_left > 0:
+		graphics.modulate.a = sin(Time.get_ticks_msec()/20) * 0.5 + 0.5
+	else:
+		graphics.modulate.a = 1
+		
 	match state:
 		State.Idle:
 			move(defaultgravity,delta)
@@ -84,14 +95,15 @@ func tickphysics(state:State,delta: float) -> void:
 			
 		State.Walljump:	
 			if state_machine.statetime < 0.2:
-				#print(str(state_machine.statetime))
-				#velocity.x += airgravity * delta
-				#ngine.time_scale = 0.3
+				
+				#Engine.time_scale = 0.3
 				stand(0.0 if isfirsttick else defaultgravity/3,delta)
 				graphics.scale.x = get_wall_normal().x
 			else :
 				move(defaultgravity,delta) 
 		State.Attack1,State.Attack2,State.Attack3:
+			stand(defaultgravity,delta)
+		State.Hurt,State.Die:
 			stand(defaultgravity,delta)
 			
 	isfirsttick = false
@@ -108,25 +120,24 @@ func move(gravity:float,delta: float)	:
 	if not is_zero_approx(direction):
 		graphics.scale.x = -1 if direction < 0 else +1
 	move_and_slide()
-	
+#同上
 func stand(gravity:float,delta: float):
-	
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	velocity.x = move_toward(velocity.x,0.0,acceleration * delta)
 	velocity.y += gravity * delta
-	#if not is_zero_approx(direction):
-		#graphics.scale.x = -1 if direction < 0 else +1
 	move_and_slide()	
 
-
+func getnextstate(state:State) ->int:
+	if states.health == 0:
+		return Statemachine.KEEP_CURRENT if state == State.Die else State.Die
+	if pendingdamage:
+		return State.Hurt	
 	
-func getnextstate(state:State) ->State:
-	var canjump := is_on_floor() or airjumptimer.time_left>0 #and not is_on_wall()
+	var canjump := is_on_floor() or airjumptimer.time_left>0 
 	var shouldjump := canjump and jumprequsttimer.time_left>0 
 	
 	if shouldjump:
 		return State.Jump
-	
 	if state in groundstates and not is_on_floor():
 		return State.Falling
 		
@@ -188,7 +199,10 @@ func getnextstate(state:State) ->State:
 		State.Attack3:
 			if not animation_player.is_playing():
 				return State.Idle
-	return state
+		State.Hurt:
+			if not animation_player.is_playing():
+				return State.Idle
+	return state_machine.KEEP_CURRENT
 	
 func transitionstate(from:State,to:State) :
 	#print("[%s] %s -> %s" %[
@@ -255,8 +269,30 @@ func transitionstate(from:State,to:State) :
 			animation_player.play("attack3")
 			$statedebug.text = str("A3")	
 			iscomborequest = false	
+		State.Hurt:
+			animation_player.play("hurt")
+			$statedebug.text=str("hurt")
+			#同猪
+			states.health -= pendingdamage.amount
+			var dir:= pendingdamage.source.global_position.direction_to(global_position)
+			velocity = dir * KNOCKBACKAMOUNT
+			pendingdamage = null	
+			#受伤启动无敌
+			invincibletimer.start()
+		State.Die:
+			animation_player.play("die")
+			$statedebug.text=str("die")	
+			#死亡动画不必闪烁
+			invincibletimer.stop()
+			
+		
 	isfirsttick =true
 
 
 func _on_hurtbox_hurt(hitbox: Hitbox) -> void:
-	pass # Replace with function body.
+	#无敌中
+	if invincibletimer.time_left>0:
+		return
+	pendingdamage = Damage.new()
+	pendingdamage.amount = 1
+	pendingdamage.source = hitbox.owner
