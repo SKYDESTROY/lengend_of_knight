@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bt7ndu4u47x2y"]
+[gd_scene load_steps=43 format=3 uid="uid://bt7ndu4u47x2y"]
 
 [ext_resource type="Texture2D" uid="uid://cuxbcd3oyu4cy" path="res://resource/char_blue_1.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cbidnvopow6jg" path="res://player.gd" id="1_onrkg"]
@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://dyn646oebrk5d" path="res://resource/gdb-keyboard-2.png" id="9_b26j0"]
 [ext_resource type="PackedScene" uid="uid://bs2o73yejcpcm" path="res://UI/gameoverscreen.tscn" id="9_n7ghd"]
 [ext_resource type="PackedScene" uid="uid://4wv76igfgble" path="res://UI/pause_screen.tscn" id="9_nvl01"]
+[ext_resource type="Texture2D" uid="uid://lhqkjrgeuuri" path="res://resource/gdb-switch-2.png" id="10_nvl01"]
+[ext_resource type="Script" uid="uid://cnlxrhkgic3of" path="res://class/interaction_icon.gd" id="12_ivps1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
 size = Vector2(12, 29)
@@ -1098,6 +1100,22 @@ _data = {
 &"wallsliding": SubResource("Animation_1jxqw")
 }
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_bwjto"]
+atlas = ExtResource("10_nvl01")
+region = Rect2(48, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_606se"]
+atlas = ExtResource("10_nvl01")
+region = Rect2(64, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1c27"]
+atlas = ExtResource("10_nvl01")
+region = Rect2(80, 80, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_op7ga"]
+atlas = ExtResource("10_nvl01")
+region = Rect2(96, 80, 16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_n7ghd"]
 atlas = ExtResource("9_b26j0")
 region = Rect2(96, 48, 16, 16)
@@ -1118,6 +1136,23 @@ region = Rect2(96, 384, 16, 16)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_bwjto")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_606se")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1c27")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_op7ga")
+}],
+"loop": true,
+"name": &"XBOX",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_n7ghd")
 }, {
 "duration": 1.0,
@@ -1130,7 +1165,7 @@ animations = [{
 "texture": SubResource("AtlasTexture_urp6f")
 }],
 "loop": true,
-"name": &"default",
+"name": &"keyboard",
 "speed": 6.0
 }]
 
@@ -1250,7 +1285,7 @@ offset_bottom = 30.0
 [node name="interactionIcon" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -53)
 sprite_frames = SubResource("SpriteFrames_bwjto")
-frame = 2
-frame_progress = 0.37907013
+animation = &"XBOX"
+script = ExtResource("12_ivps1")
 
 [connection signal="hurt" from="graphics/Hurtbox" to="." method="_on_hurtbox_hurt"]

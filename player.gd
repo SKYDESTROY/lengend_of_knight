@@ -346,6 +346,7 @@ func transitionstate(from:State,to:State) :
 			iscomborequest = false	
 		State.Hurt:
 			animation_player.play("hurt")
+			Input.start_joy_vibration(0,0,0.8,0.3)
 			$statedebug.text=str("hurt")
 			#同猪
 			states.health -= pendingdamage.amount
