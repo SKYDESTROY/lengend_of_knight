@@ -1,6 +1,7 @@
 extends Node2D
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer/ground
 @onready var camera_2d: Camera2D = $Player/Camera2D
+@onready var player: Player = $Player
 
 func _ready() -> void:
 	#地图边界大小 positon左上角 end右上角   grow向内偏移1避免相机拍到边界
@@ -13,4 +14,8 @@ func _ready() -> void:
 	camera_2d.limit_left = used.position.x * tile_size.x
 	camera_2d.limit_right = used.end.x * tile_size.x
 	#重置移动平滑，防止相机初始化瞬移
+	camera_2d.reset_smoothing()
+func updateplayer(pos:Vector2,direction:Player.Direction):
+	player.global_position = pos
+	player.direction = direction
 	camera_2d.reset_smoothing()

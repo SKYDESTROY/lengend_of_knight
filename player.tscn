@@ -1,12 +1,11 @@
-[gd_scene load_steps=36 format=3 uid="uid://bt7ndu4u47x2y"]
+[gd_scene load_steps=35 format=3 uid="uid://bt7ndu4u47x2y"]
 
 [ext_resource type="Texture2D" uid="uid://cuxbcd3oyu4cy" path="res://resource/char_blue_1.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cbidnvopow6jg" path="res://player.gd" id="1_onrkg"]
 [ext_resource type="Texture2D" uid="uid://b2e3h4lfhaijb" path="res://resource/char_blue_2.png" id="2_i3pqv"]
-[ext_resource type="Script" uid="uid://dymrtu3adkkg7" path="res://statemachine.gd" id="3_i3pqv"]
-[ext_resource type="Script" uid="uid://bsdjjagpnvq8h" path="res://hurtbox.gd" id="3_sweqy"]
-[ext_resource type="Script" uid="uid://dws70ksigquq3" path="res://hitbox.gd" id="4_2hs0m"]
-[ext_resource type="Script" uid="uid://dsye2271dmflt" path="res://States.gd" id="6_1jxqw"]
+[ext_resource type="Script" uid="uid://dymrtu3adkkg7" path="res://class/statemachine.gd" id="3_i3pqv"]
+[ext_resource type="Script" uid="uid://bsdjjagpnvq8h" path="res://class/hurtbox.gd" id="3_sweqy"]
+[ext_resource type="Script" uid="uid://dws70ksigquq3" path="res://class/hitbox.gd" id="4_2hs0m"]
 [ext_resource type="PackedScene" uid="uid://b150gx7g836s4" path="res://UI/status_panel.tscn" id="8_dw050"]
 [ext_resource type="Texture2D" uid="uid://dyn646oebrk5d" path="res://resource/gdb-keyboard-2.png" id="9_b26j0"]
 
@@ -1195,10 +1194,6 @@ libraries = {
 &"": SubResource("AnimationLibrary_2hs0m")
 }
 
-[node name="States" type="Node" parent="AnimationPlayer"]
-script = ExtResource("6_1jxqw")
-metadata/_custom_type_script = "uid://dsye2271dmflt"
-
 [node name="airjumptimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
@@ -1239,12 +1234,11 @@ one_shot = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="StatusPanel" parent="CanvasLayer" node_paths=PackedStringArray("states") instance=ExtResource("8_dw050")]
+[node name="StatusPanel" parent="CanvasLayer" instance=ExtResource("8_dw050")]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 92.0
 offset_bottom = 30.0
-states = NodePath("../../AnimationPlayer/States")
 
 [node name="interactionIcon" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -53)

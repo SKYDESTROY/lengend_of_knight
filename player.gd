@@ -1,6 +1,11 @@
 #animationplayer.deterministic:没有关键帧的轨道默认使用reset轨道，避免动画轨道数量不同的影响
 class_name Player
 extends CharacterBody2D
+enum Direction{
+	LEFT = -1,
+	RIGHT=+1,
+}
+
 
 enum  State {
 	Idle,
@@ -24,7 +29,7 @@ const AIR_ACCELERATION:= RUN_SPEED/0.1
 #y轴正方向向下
 const JUMP_VELOCITY :=-300.0
 #蹬墙跳有x方向速度
-const WALL_JUMP_VELOCITY :=Vector2(350 ,-250)
+const WALL_JUMP_VELOCITY :=Vector2(200 ,-250)
 const LITTLE_JUMP_VELOCITY:= JUMP_VELOCITY/2
 #const airgravity := -100
 const SLIDING_DURATION = 0.3
@@ -34,7 +39,13 @@ const SLIDINGENERGY = 4.0
 const  KNOCKBACKAMOUNT := 300.0
 const LANDINGHEIGHT :=100.0
 
-
+@export var direction  :  = Direction.RIGHT :
+	set(v):
+		direction = v
+		if not is_node_ready():
+			await ready
+		graphics.scale.x = direction
+		
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
 var isfirsttick := false
 var iscomborequest := false
@@ -47,7 +58,7 @@ var interactablewith : Array[Interactable]
 @onready var airjumptimer: Timer = $airjumptimer
 #动画flip_h被爬墙动画占用，借用父节点的scale模拟flip_h进行翻转动画
 @onready var graphics: Node2D = $graphics
-@onready var states: States = $AnimationPlayer/States
+@onready var states: States = Game.player_states
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 #手部脚部检测器
 @onready var handcheck: RayCast2D = $graphics/handcheck
@@ -104,7 +115,7 @@ func tickphysics(state:State,delta: float) -> void:
 	interaction_icon.visible = not interactablewith.is_empty()
 	#无敌闪烁，调整alpha通道,在0~1之间正弦变化
 	if invincibletimer.time_left > 0:
-		graphics.modulate.a = sin(Time.get_ticks_msec()/20) * 0.5 + 0.5
+		graphics.modulate.a = sin(Time.get_ticks_msec()/20.0) * 0.5 + 0.5
 	else:
 		graphics.modulate.a = 1
 		
@@ -124,14 +135,14 @@ func tickphysics(state:State,delta: float) -> void:
 			#缓慢滑墙
 			move(defaultgravity/3,delta)	
 			#根据墙面法线翻转滑墙动画
-			graphics.scale.x = -get_wall_normal().x
+			direction =Direction.LEFT if get_wall_normal().x >0 else Direction.RIGHT
 			
 		State.Walljump:	
-			if state_machine.statetime < 0.2:
+			if state_machine.statetime < 0.1:
 				
 				#Engine.time_scale = 0.3
 				stand(0.0 if isfirsttick else defaultgravity/3,delta)
-				graphics.scale.x = get_wall_normal().x
+				direction =Direction.LEFT if get_wall_normal().x >0 else Direction.RIGHT
 			else :
 				move(defaultgravity,delta) 
 		State.Attack1,State.Attack2,State.Attack3:
@@ -145,14 +156,14 @@ func tickphysics(state:State,delta: float) -> void:
 	
 func move(gravity:float,delta: float)	:
 	#自由态横向纵向速度
-	var direction :=Input.get_axis("move_left","move_right")
+	var movement :=Input.get_axis("move_left","move_right")
 	var acceleration := FLOOR_ACCELERATION if is_on_floor() else AIR_ACCELERATION
 	#地面缓慢加速,空中迅速加速
-	velocity.x = move_toward(velocity.x,direction* RUN_SPEED,acceleration * delta)
+	velocity.x = move_toward(velocity.x,movement* RUN_SPEED,acceleration * delta)
 	velocity.y += gravity * delta
 	#贴图跟随状态翻转	
-	if not is_zero_approx(direction):
-		graphics.scale.x = -1 if direction < 0 else +1
+	if not is_zero_approx(movement):
+		direction = Direction.LEFT if movement < 0 else Direction.RIGHT
 	move_and_slide()
 #同上
 func stand(gravity:float,delta: float):
@@ -161,7 +172,7 @@ func stand(gravity:float,delta: float):
 	velocity.y += gravity * delta
 	move_and_slide()	
 func slide(delta:float):
-	velocity.x = graphics.scale.x * SLIDINGSPEED
+	velocity.x = direction * SLIDINGSPEED
 	velocity.y += defaultgravity * delta
 	move_and_slide()	
 
@@ -179,9 +190,9 @@ func getnextstate(state:State) ->int:
 	if state in groundstates and not is_on_floor():
 		return State.Falling
 		
-	var direction :=Input.get_axis("move_left","move_right")
+	var movement :=Input.get_axis("move_left","move_right")
 	#地面静止站立状态
-	var isstill := is_zero_approx(direction) and is_zero_approx(velocity.x)
+	var isstill := is_zero_approx(movement) and is_zero_approx(velocity.x)
 	
 	match state:
 		State.Idle:

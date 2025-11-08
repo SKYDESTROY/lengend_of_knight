@@ -1,8 +1,8 @@
 [gd_scene load_steps=16 format=3 uid="uid://bm2cbtwidxw71"]
 
-[ext_resource type="PackedScene" uid="uid://b40tsd7kdcgyt" path="res://enemy.tscn" id="1_4ov56"]
+[ext_resource type="PackedScene" uid="uid://b40tsd7kdcgyt" path="res://enemy/enemy.tscn" id="1_4ov56"]
 [ext_resource type="Texture2D" uid="uid://bappus0lm32wr" path="res://resource/boar/Idle-Sheet.png" id="2_d1qa8"]
-[ext_resource type="Script" uid="uid://c15pjb1shou0q" path="res://boar.gd" id="2_xcsty"]
+[ext_resource type="Script" uid="uid://c15pjb1shou0q" path="res://enemy/boar.gd" id="2_xcsty"]
 [ext_resource type="Texture2D" uid="uid://bjt56ybndqhsi" path="res://resource/boar/Run-Sheet.png" id="3_5v2dv"]
 [ext_resource type="Texture2D" uid="uid://bsrcwjiwbqmpk" path="res://resource/boar/Walk-Base-Sheet.png" id="4_u1bis"]
 [ext_resource type="Texture2D" uid="uid://c44u4d7y1tb0e" path="res://resource/boar/Hit-Sheet.png" id="5_u1bis"]
