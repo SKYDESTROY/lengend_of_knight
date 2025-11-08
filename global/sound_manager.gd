@@ -26,6 +26,13 @@ func setup_ui_sound(node:Node):
 	if button:
 		button.pressed.connect(play_sfx.bind("UIpress"))
 		button.focus_entered.connect(play_sfx.bind("UIfocus"))
+		button.mouse_entered.connect(button.grab_focus)
+	var slider := node as Slider
+	if slider :
+		slider.value_changed.connect(play_sfx.bind("UIpress").unbind(1))
+		slider.focus_entered.connect(play_sfx.bind("UIfocus"))
+		slider.mouse_entered.connect(slider.grab_focus)	
+	
 	for child in node.get_children():
 		setup_ui_sound(child)
 	

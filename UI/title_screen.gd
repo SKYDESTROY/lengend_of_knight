@@ -8,9 +8,8 @@ func _ready() -> void:
 	loadgame.disabled = not Game.hassave()
 	#键盘焦点
 	newgame.grab_focus()
-	#鼠标焦点
-	for button :Button in v.get_children():
-		button.mouse_entered.connect(button.grab_focus)
+	
+		
 	SoundManager.setup_ui_sound(self)
 	if bgm:
 		SoundManager.play_bgm(bgm)

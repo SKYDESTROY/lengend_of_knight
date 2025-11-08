@@ -67,6 +67,7 @@ var interactablewith : Array[Interactable]
 @onready var slidingrequsttimer: Timer = $slidingrequsttimer
 @onready var interaction_icon: AnimatedSprite2D = $interactionIcon
 @onready var gameoverscreen: Control = $CanvasLayer/Gameoverscreen
+@onready var pause_screen: Control = $CanvasLayer/PauseScreen
 
 func _ready() -> void:
 	add_to_group("player")
@@ -89,6 +90,9 @@ func _unhandled_input(event: InputEvent) -> void:
 			velocity.y = JUMP_VELOCITY/2
 	if event.is_action_pressed("attack") and cancombo:
 		iscomborequest = true
+	if event.is_action_pressed("pause"):
+		pause_screen.showpause()
+	
 #贴墙和手部脚部射线检测都通过才允许滑墙，防止空气爬
 func canwallslide() ->bool:
 	return is_on_wall() and handcheck.is_colliding() and footcheck.is_colliding()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://bt7ndu4u47x2y"]
+[gd_scene load_steps=37 format=3 uid="uid://bt7ndu4u47x2y"]
 
 [ext_resource type="Texture2D" uid="uid://cuxbcd3oyu4cy" path="res://resource/char_blue_1.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cbidnvopow6jg" path="res://player.gd" id="1_onrkg"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b150gx7g836s4" path="res://UI/status_panel.tscn" id="8_dw050"]
 [ext_resource type="Texture2D" uid="uid://dyn646oebrk5d" path="res://resource/gdb-keyboard-2.png" id="9_b26j0"]
 [ext_resource type="PackedScene" uid="uid://bs2o73yejcpcm" path="res://UI/gameoverscreen.tscn" id="9_n7ghd"]
+[ext_resource type="PackedScene" uid="uid://4wv76igfgble" path="res://UI/pause_screen.tscn" id="9_nvl01"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2hs0m"]
 size = Vector2(12, 29)
@@ -1243,6 +1244,8 @@ offset_right = 92.0
 offset_bottom = 30.0
 
 [node name="Gameoverscreen" parent="CanvasLayer" instance=ExtResource("9_n7ghd")]
+
+[node name="PauseScreen" parent="CanvasLayer" instance=ExtResource("9_nvl01")]
 
 [node name="interactionIcon" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -53)
