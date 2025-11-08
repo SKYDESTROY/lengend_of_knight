@@ -1,7 +1,7 @@
 class_name Enemy
 extends CharacterBody2D
 #敌人类，所有敌人可继承
-
+signal died
 enum Direction{
 	LEFT = -1,
 	RIGHT=+1,
@@ -32,4 +32,5 @@ func move(speed:float,delta:float) :
 	velocity.y += defaultgravity * delta
 	move_and_slide()
 func die():
+	died.emit()
 	queue_free()

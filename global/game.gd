@@ -15,13 +15,16 @@ func _ready() -> void:
 	color_rect.color.a = 0
 	
 func changescene(path:String,params:={}):
+	#不存在返回0.2
+	var duration = params.get("duration",0.2) as float
+	
 	var tree:=get_tree()
 	#暂停游戏，防止转场操控和受到伤害
 	tree.paused = true
 	#等待淡入转场效果
 	var tween:=create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(color_rect,"color:a",1,0.2)
+	tween.tween_property(color_rect,"color:a",1,duration)
 	await  tween.finished
 	#标题场景不进行字典操作
 	if tree.current_scene is World:
@@ -54,7 +57,7 @@ func changescene(path:String,params:={}):
 	#等待淡出转场效果
 	tween=create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(color_rect,"color:a",0,0.2)
+	tween.tween_property(color_rect,"color:a",0,duration)
 	
 func save_game():
 	var scene :=get_tree().current_scene
@@ -98,13 +101,13 @@ func load_game():
 				player_states.fromdict(data.states)	
 	})
 func new_game():
-	changescene("res://world/forest/forest.tscn",{
-	
+	changescene("res://world/forest/forest.tscn",{duration = 1,	
 		init = func ():
 				worldstates = {}
 				player_states.fromdict(defaultplayerstates)	
 	})
 func backtotitle():
-	changescene("res://UI/title_screen.tscn")
+	changescene("res://UI/title_screen.tscn",{duration = 1})
+	
 func hassave() ->bool:
 	return FileAccess.file_exists(SAVE_PATH)

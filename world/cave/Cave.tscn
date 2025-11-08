@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=4 uid="uid://dp6fclj68rf1y"]
 
-[ext_resource type="Script" uid="uid://p0j42rm4arvt" path="res://world/forest/world.gd" id="1_270be"]
+[ext_resource type="Script" uid="uid://baj4npf1pncw6" path="res://world/cave/cave.gd" id="1_270be"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_6vnai"]
 [ext_resource type="TileSet" uid="uid://d063vs6au5e0j" path="res://resource/cave.tres" id="3_pfcw1"]
 [ext_resource type="PackedScene" uid="uid://creuewhm5skff" path="res://object/mine_gate.tscn" id="4_knx1k"]
@@ -65,3 +65,5 @@ metadata/_custom_type_script = "uid://bgvme0jaboy0u"
 position = Vector2(402, 37)
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
+
+[connection signal="died" from="boar" to="." method="_on_boar_died"]

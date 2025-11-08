@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cer5u0a84kgof"]
+
+[ext_resource type="Script" uid="uid://1xyg4rlx62if" path="res://UI/game_end_screen.gd" id="1_klwyb"]
+[ext_resource type="Theme" uid="uid://qxewdenqjq8p" path="res://UI/maintheme.tres" id="2_ir131"]
+
+[node name="GameEndScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_klwyb")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_ir131")
+horizontal_alignment = 1
+vertical_alignment = 1

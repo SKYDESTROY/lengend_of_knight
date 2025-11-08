@@ -66,6 +66,7 @@ var interactablewith : Array[Interactable]
 @onready var invincibletimer: Timer = $invincibletimer
 @onready var slidingrequsttimer: Timer = $slidingrequsttimer
 @onready var interaction_icon: AnimatedSprite2D = $interactionIcon
+@onready var gameoverscreen: Control = $CanvasLayer/Gameoverscreen
 
 func _ready() -> void:
 	add_to_group("player")
@@ -100,7 +101,7 @@ func shouldsliding()->bool:
 	return not footcheck.is_colliding()
 #死亡重新加载场景，使用die动画里的方法关键帧触发
 func die()->void:
-	get_tree().reload_current_scene()
+	gameoverscreen.showgameover()
 #加入交互组	
 func register_interactable(v:Interactable):
 	if state_machine.currentstate == State.Die:
