@@ -1,7 +1,7 @@
 extends Node
 
 const  SAVE_PATH := "user://data.sav"
-
+const  CONFIG_PATH := "user://data.ini"
 #场景名称 -> {
 #enemyalive -> [敌人的path]
 #}
@@ -13,6 +13,7 @@ var states
 
 func _ready() -> void:
 	color_rect.color.a = 0
+	load_config()
 	
 func changescene(path:String,params:={}):
 	#不存在返回0.2
@@ -82,6 +83,7 @@ func save_game():
 	if not file:
 		return
 	file.store_string(json)
+	
 func load_game():
 	var file := FileAccess.open(SAVE_PATH,FileAccess.READ)
 	if not file:
@@ -100,14 +102,39 @@ func load_game():
 				worldstates = data.worldstates
 				player_states.fromdict(data.states)	
 	})
+	
 func new_game():
 	changescene("res://world/forest/forest.tscn",{duration = 1,	
 		init = func ():
 				worldstates = {}
 				player_states.fromdict(defaultplayerstates)	
 	})
+	
 func backtotitle():
 	changescene("res://UI/title_screen.tscn",{duration = 1})
 	
 func hassave() ->bool:
 	return FileAccess.file_exists(SAVE_PATH)
+	
+func save_config():
+	var config :=ConfigFile.new()
+	config.set_value("audio","master",SoundManager.get_volume(SoundManager.bus.MASTER))
+	config.set_value("audio","sfx",SoundManager.get_volume(SoundManager.bus.SFX))
+	config.set_value("audio","bgm",SoundManager.get_volume(SoundManager.bus.BGM))
+	config.save(CONFIG_PATH)
+	
+func load_config():
+	var config := ConfigFile.new()
+	config.load(CONFIG_PATH)
+	SoundManager.set_volume(
+		SoundManager.bus.MASTER,
+	config.get_value("audio","master",0.5)
+	)
+	SoundManager.set_volume(
+		SoundManager.bus.SFX,
+	config.get_value("audio","sfx",1.0)
+	)
+	SoundManager.set_volume(
+		SoundManager.bus.BGM,
+	config.get_value("audio","bgm",1.0)
+	)
