@@ -7,4 +7,4 @@ func interact():
 	#changescenetofile不会同时加载场景，只会在前一个场景消失后的一帧返回新场景
 	#在此修改只修改旧场景
 	#get_tree().change_scene_to_file(path)
-	Game.changescene(path,entrypoint)
+	Game.changescene(path,{entrypoint =entrypoint})

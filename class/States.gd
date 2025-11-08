@@ -24,3 +24,15 @@ signal energychanged
 
 func _process(delta: float) -> void:
 	energy += energyregen * delta
+	
+func todict() -> Dictionary :
+	return {
+		max_energy = maxenergy,
+		max_health = maxhealth,
+		health = health
+	}
+	
+func fromdict(dictionary:Dictionary):
+	maxenergy = dictionary.max_energy
+	maxhealth = dictionary.max_health
+	health = dictionary.health

@@ -25,7 +25,7 @@ func updateplayer(pos:Vector2,direction:Player.Direction):
 func todict() -> Dictionary :
 	var enemyalive := []
 	for node in get_tree().get_nodes_in_group("enemy"):
-		var path :=get_path_to(node)
+		var path :=get_path_to(node) as String
 		enemyalive.append(path)
 	return {
 		enemy_alive = enemyalive,
@@ -33,6 +33,6 @@ func todict() -> Dictionary :
 	
 func fromdict(dictionary:Dictionary):
 	for node in get_tree().get_nodes_in_group("enemy"):
-		var path := get_path_to(node)
+		var path := get_path_to(node) as String
 		if path not in dictionary.enemy_alive:
 			node.queue_free()

@@ -12,6 +12,7 @@ func _ready():
 	updatehealth(true)
 	states.energychanged.connect(updateenergy)
 	updateenergy()
+	#4.2 旧场景转场时无法访问，暂时断开信号防止错误
 	tree_exited.connect(func():
 		states.healthchanged.disconnect(updatehealth)
 		states.energychanged.disconnect(updateenergy)
