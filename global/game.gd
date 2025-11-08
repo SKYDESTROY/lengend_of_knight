@@ -9,7 +9,7 @@ var worldstates :={}
 var states
 @onready var player_states: States = $PlayerStates
 @onready var color_rect: ColorRect = $ColorRect
-
+@onready var defaultplayerstates := player_states.todict()
 
 func _ready() -> void:
 	color_rect.color.a = 0
@@ -23,9 +23,11 @@ func changescene(path:String,params:={}):
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(color_rect,"color:a",1,0.2)
 	await  tween.finished
-	#保存旧场景到字典
-	var oldname = tree.current_scene.scene_file_path.get_file().get_basename()
-	worldstates[oldname] = tree.current_scene.todict()
+	#标题场景不进行字典操作
+	if tree.current_scene is World:
+		#保存旧场景到字典
+		var oldname = tree.current_scene.scene_file_path.get_file().get_basename()
+		worldstates[oldname] = tree.current_scene.todict()
 	tree.change_scene_to_file(path)
 	#等待新场景加载完毕
 	await tree.tree_changed
@@ -34,11 +36,11 @@ func changescene(path:String,params:={}):
 	if "init" in params:
 		params.init.call()
 		
-	
-	#新场景读取字典
-	var newname = tree.current_scene.scene_file_path.get_file().get_basename()
-	if newname in worldstates:
-		tree.current_scene.fromdict(worldstates[newname])
+	if tree.current_scene is World:
+		#新场景读取字典
+		var newname = tree.current_scene.scene_file_path.get_file().get_basename()
+		if newname in worldstates:
+			tree.current_scene.fromdict(worldstates[newname])
 	
 	if "entrypoints" in params:
 		for node in tree.get_nodes_in_group("entrypoints"):
@@ -95,6 +97,14 @@ func load_game():
 				worldstates = data.worldstates
 				player_states.fromdict(data.states)	
 	})
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		load_game()	
+func new_game():
+	changescene("res://world/forest/forest.tscn",{
+	
+		init = func ():
+				worldstates = {}
+				player_states.fromdict(defaultplayerstates)	
+	})
+func backtotitle():
+	changescene("res://UI/title_screen.tscn")
+func hassave() ->bool:
+	return FileAccess.file_exists(SAVE_PATH)
