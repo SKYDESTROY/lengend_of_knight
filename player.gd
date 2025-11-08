@@ -6,7 +6,6 @@ enum Direction{
 	RIGHT=+1,
 }
 
-
 enum  State {
 	Idle,
 	Running,
@@ -69,6 +68,7 @@ var interactablewith : Array[Interactable]
 @onready var interaction_icon: AnimatedSprite2D = $interactionIcon
 
 func _ready() -> void:
+	add_to_group("player")
 	#初始化场景时，使玩家在moveandclide获取isonfloor结果，防止进入fall状态
 	stand(defaultgravity,0.01)
 

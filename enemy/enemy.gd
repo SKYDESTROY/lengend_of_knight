@@ -20,9 +20,12 @@ enum Direction{
 			await ready
 		graphics.scale.x = -direction
 		
-@export var maxspeed: float = 180
+@export var maxspeed: float = 120
 @export var acceleration: float = 2000
 var defaultgravity := ProjectSettings.get("physics/2d/default_gravity") as float
+
+func _ready() -> void:
+	add_to_group("enemy")
 
 func move(speed:float,delta:float) :
 	velocity.x = move_toward(velocity.x,direction * speed,acceleration * delta)

@@ -1,14 +1,14 @@
 [gd_scene load_steps=7 format=4 uid="uid://dp6fclj68rf1y"]
 
-[ext_resource type="Script" uid="uid://brb4k8dgtvo7m" path="res://world/cave/Cave.gd" id="1_7lnxa"]
+[ext_resource type="Script" uid="uid://p0j42rm4arvt" path="res://world/forest/world.gd" id="1_270be"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_6vnai"]
 [ext_resource type="TileSet" uid="uid://d063vs6au5e0j" path="res://resource/cave.tres" id="3_pfcw1"]
 [ext_resource type="PackedScene" uid="uid://creuewhm5skff" path="res://object/mine_gate.tscn" id="4_knx1k"]
 [ext_resource type="Script" uid="uid://bgvme0jaboy0u" path="res://class/Entrypoint.gd" id="5_hkk62"]
 [ext_resource type="PackedScene" uid="uid://bm2cbtwidxw71" path="res://enemy/boar.tscn" id="9_2b72k"]
 
-[node name="World" type="Node2D"]
-script = ExtResource("1_7lnxa")
+[node name="Cave" type="Node2D"]
+script = ExtResource("1_270be")
 metadata/_edit_horizontal_guides_ = [192.0]
 metadata/_edit_vertical_guides_ = [96.0]
 

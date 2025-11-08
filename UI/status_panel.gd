@@ -8,10 +8,14 @@ func _ready():
 	if not states:
 		states = Game.player_states
 	states.healthchanged.connect(updatehealth)
-	states.energychanged.connect(updateenergy)
 	#第一次更新
 	updatehealth(true)
+	states.energychanged.connect(updateenergy)
 	updateenergy()
+	tree_exited.connect(func():
+		states.healthchanged.disconnect(updatehealth)
+		states.energychanged.disconnect(updateenergy)
+		)
 
 func updatehealth(skipanim:=false):
 	var percentage := states.health / float (states.maxhealth)

@@ -15,7 +15,24 @@ func _ready() -> void:
 	camera_2d.limit_right = used.end.x * tile_size.x
 	#重置移动平滑，防止相机初始化瞬移
 	camera_2d.reset_smoothing()
+	
 func updateplayer(pos:Vector2,direction:Player.Direction):
 	player.global_position = pos
 	player.direction = direction
 	camera_2d.reset_smoothing()
+	camera_2d.force_update_scroll()
+	
+func todict() -> Dictionary :
+	var enemyalive := []
+	for node in get_tree().get_nodes_in_group("enemy"):
+		var path :=get_path_to(node)
+		enemyalive.append(path)
+	return {
+		enemy_alive = enemyalive,
+	}
+	
+func fromdict(dictionary:Dictionary):
+	for node in get_tree().get_nodes_in_group("enemy"):
+		var path := get_path_to(node)
+		if path not in dictionary.enemy_alive:
+			node.queue_free()

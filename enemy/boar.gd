@@ -14,6 +14,10 @@ var pendingdamage:Damage
 @onready var floorcheck: RayCast2D = $Graphics/floorcheck
 @onready var playercheck: RayCast2D = $Graphics/playercheck
 @onready var calmdowntimer: Timer = $calmdowntimer
+
+func _ready() -> void:
+	super()
+	
 #playercheck添加检测环境，防止野猪穿墙透视玩家
 func canseeplayer() ->bool:
 	if not playercheck.is_colliding():
