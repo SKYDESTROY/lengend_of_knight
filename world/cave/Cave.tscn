@@ -13,7 +13,7 @@ metadata/_edit_horizontal_guides_ = [192.0]
 metadata/_edit_vertical_guides_ = [96.0]
 
 [node name="Player" parent="." instance=ExtResource("2_6vnai")]
-position = Vector2(74, 142)
+position = Vector2(72, 144)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1, -16)

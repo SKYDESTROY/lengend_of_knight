@@ -68,7 +68,9 @@ var interactablewith : Array[Interactable]
 @onready var slidingrequsttimer: Timer = $slidingrequsttimer
 @onready var interaction_icon: AnimatedSprite2D = $interactionIcon
 
-
+func _ready() -> void:
+	#初始化场景时，使玩家在moveandclide获取isonfloor结果，防止进入fall状态
+	stand(defaultgravity,0.01)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("interact") and interactablewith:
@@ -269,12 +271,12 @@ func getnextstate(state:State) ->int:
 	return state_machine.KEEP_CURRENT
 	
 func transitionstate(from:State,to:State) :
-	#print("[%s] %s -> %s" %[
-		#Engine.get_physics_frames(),
-		#State.keys()[from] if from != -1 else "start",
-		#State.keys()[to],
-		#])
-		#
+	print("[%s] %s -> %s" %[
+		Engine.get_physics_frames(),
+		State.keys()[from] if from != -1 else "start",
+		State.keys()[to],
+		])
+		
 	
 	if from not in groundstates and to in groundstates :
 		airjumptimer.stop()

@@ -16,7 +16,7 @@ metadata/_edit_horizontal_guides_ = [192.0]
 metadata/_edit_vertical_guides_ = [96.0]
 
 [node name="Player" parent="." instance=ExtResource("2_fj7yv")]
-position = Vector2(93, 127)
+position = Vector2(96, 144)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1, -16)
@@ -55,16 +55,16 @@ entrypoint = "leftentry"
 [node name="MineGate2" parent="TileMapLayer" instance=ExtResource("4_gbfbk")]
 position = Vector2(362, -149)
 path = "uid://dp6fclj68rf1y"
-entrypoint = "rightmentry"
+entrypoint = "rightentry"
 
 [node name="topentry" type="Marker2D" parent="TileMapLayer"]
-position = Vector2(336, -152)
+position = Vector2(336, -144)
 script = ExtResource("5_ioo17")
 direction = -1
 metadata/_custom_type_script = "uid://bgvme0jaboy0u"
 
 [node name="bottomentry" type="Marker2D" parent="TileMapLayer"]
-position = Vector2(720, 136)
+position = Vector2(720, 144)
 script = ExtResource("5_ioo17")
 direction = -1
 metadata/_custom_type_script = "uid://bgvme0jaboy0u"

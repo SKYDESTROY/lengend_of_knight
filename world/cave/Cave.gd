@@ -18,4 +18,6 @@ func _ready() -> void:
 func updateplayer(pos:Vector2,direction:Player.Direction):
 	player.global_position = pos
 	player.direction = direction
+	#防止进入新场景高度落差产生landing动画
+	player.fallfromy = pos.y
 	camera_2d.reset_smoothing()
