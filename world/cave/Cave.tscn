@@ -63,3 +63,5 @@ metadata/_custom_type_script = "uid://bgvme0jaboy0u"
 
 [node name="boar" parent="." instance=ExtResource("9_2b72k")]
 position = Vector2(402, 37)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]

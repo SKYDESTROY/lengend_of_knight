@@ -1,0 +1,201 @@
+[gd_scene load_steps=10 format=3 uid="uid://0iewqaoig3np"]
+
+[ext_resource type="Script" uid="uid://cxskhakj1t3dn" path="res://object/savestone.gd" id="1_yxfhp"]
+[ext_resource type="Texture2D" uid="uid://dxsmgm0wbp6gc" path="res://resource/Props-Rocks.png" id="2_bc3c2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0dbou"]
+size = Vector2(41, 37)
+
+[sub_resource type="Gradient" id="Gradient_ngi31"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_helru"]
+gradient = SubResource("Gradient_ngi31")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+metadata/_snap_enabled = true
+
+[sub_resource type="Animation" id="Animation_yxfhp"]
+resource_name = "ready"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PropsRocks2:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(96, 288, 16, 16)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:monitoring")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_bc3c2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PropsRocks2:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(96, 288, 16, 16)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:monitoring")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PointLight2D:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_0dbou"]
+resource_name = "activated"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:enabled")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("PropsRocks2:region_rect")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Rect2(240, 288, 16, 16)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:monitoring")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("PointLight2D:energy")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [1.2, 0.5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ngi31"]
+_data = {
+&"RESET": SubResource("Animation_bc3c2"),
+&"activated": SubResource("Animation_0dbou"),
+&"ready": SubResource("Animation_yxfhp")
+}
+
+[node name="savestone" type="Area2D"]
+script = ExtResource("1_yxfhp")
+metadata/_custom_type_script = "uid://c6rstj8j6tbk5"
+
+[node name="PropsRocks" type="Sprite2D" parent="."]
+position = Vector2(0, -39)
+texture = ExtResource("2_bc3c2")
+region_enabled = true
+region_rect = Rect2(4, 82, 58, 78)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.5, -19.5)
+shape = SubResource("RectangleShape2D_0dbou")
+
+[node name="PropsRocks2" type="Sprite2D" parent="."]
+position = Vector2(1, -48)
+texture = ExtResource("2_bc3c2")
+region_enabled = true
+region_rect = Rect2(96, 288, 16, 16)
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(1, -48)
+enabled = false
+color = Color(0, 1, 1, 1)
+texture = SubResource("GradientTexture2D_helru")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+callback_mode_process = 0
+libraries = {
+&"": SubResource("AnimationLibrary_ngi31")
+}
+autoplay = "ready"
