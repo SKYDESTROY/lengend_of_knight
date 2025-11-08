@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://bt7ndu4u47x2y"]
+[gd_scene load_steps=44 format=3 uid="uid://bt7ndu4u47x2y"]
 
 [ext_resource type="Texture2D" uid="uid://cuxbcd3oyu4cy" path="res://resource/char_blue_1.png" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://cbidnvopow6jg" path="res://player.gd" id="1_onrkg"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bsdjjagpnvq8h" path="res://class/hurtbox.gd" id="3_sweqy"]
 [ext_resource type="Script" uid="uid://dws70ksigquq3" path="res://class/hitbox.gd" id="4_2hs0m"]
 [ext_resource type="PackedScene" uid="uid://b150gx7g836s4" path="res://UI/status_panel.tscn" id="8_dw050"]
+[ext_resource type="PackedScene" uid="uid://12cfqnhqg7r2" path="res://UI/virtual_joypad.tscn" id="8_urp6f"]
 [ext_resource type="Texture2D" uid="uid://dyn646oebrk5d" path="res://resource/gdb-keyboard-2.png" id="9_b26j0"]
 [ext_resource type="PackedScene" uid="uid://bs2o73yejcpcm" path="res://UI/gameoverscreen.tscn" id="9_n7ghd"]
 [ext_resource type="PackedScene" uid="uid://4wv76igfgble" path="res://UI/pause_screen.tscn" id="9_nvl01"]
@@ -1277,6 +1278,9 @@ offset_left = 4.0
 offset_top = 4.0
 offset_right = 92.0
 offset_bottom = 30.0
+
+[node name="VirtualJoypad" parent="CanvasLayer" instance=ExtResource("8_urp6f")]
+modulate = Color(1, 1, 1, 0.654902)
 
 [node name="Gameoverscreen" parent="CanvasLayer" instance=ExtResource("9_n7ghd")]
 
