@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=4 uid="uid://vkgple8hessc"]
+[gd_scene load_steps=22 format=4 uid="uid://vkgple8hessc"]
 
 [ext_resource type="Theme" uid="uid://qxewdenqjq8p" path="res://UI/maintheme.tres" id="1_coop4"]
 [ext_resource type="FontFile" uid="uid://d2tec4pf7sd4c" path="res://resource/SmileySans-Oblique.ttf" id="1_iaef4"]
 [ext_resource type="Script" uid="uid://f58gp81p7jqr" path="res://UI/title_screen.gd" id="2_5whv5"]
+[ext_resource type="AudioStream" uid="uid://bpt3ij4tpl8ob" path="res://resource/music/02 1 titles LOOP.mp3" id="3_5olrl"]
 [ext_resource type="TileSet" uid="uid://gprcdj21o6xb" path="res://resource/worldtileset.tres" id="4_ywbsv"]
 [ext_resource type="Texture2D" uid="uid://c82s1bfe0yiki" path="res://resource/Background2.png" id="5_5olrl"]
 [ext_resource type="Texture2D" uid="uid://cm0rqlmbj5kyg" path="res://resource/Background.png" id="6_xc4vh"]
@@ -73,6 +74,21 @@ animations = [{
 "speed": 12.0
 }]
 
+[sub_resource type="Animation" id="Animation_5olrl"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("V:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(302, 90)]
+}
+
 [sub_resource type="Animation" id="Animation_ywbsv"]
 resource_name = "enter"
 length = 0.4
@@ -90,21 +106,6 @@ tracks/0/keys = {
 "values": [Vector2(396, 90), Vector2(302, 90)]
 }
 
-[sub_resource type="Animation" id="Animation_5olrl"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("V:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(302, 90)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xc4vh"]
 _data = {
 &"RESET": SubResource("Animation_5olrl"),
@@ -120,6 +121,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_coop4")
 script = ExtResource("2_5whv5")
+bgm = ExtResource("3_5olrl")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

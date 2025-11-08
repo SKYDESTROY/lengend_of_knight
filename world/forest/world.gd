@@ -1,5 +1,6 @@
 class_name World
 extends Node2D
+@export var bgm :AudioStream
 @onready var tile_map_layer: TileMapLayer = $TileMapLayer/ground
 @onready var camera_2d: Camera2D = $Player/Camera2D
 @onready var player: Player = $Player
@@ -16,7 +17,11 @@ func _ready() -> void:
 	camera_2d.limit_right = used.end.x * tile_size.x
 	#重置移动平滑，防止相机初始化瞬移
 	camera_2d.reset_smoothing()
+	if bgm:
+		SoundManager.play_bgm(bgm)
 	
+	
+		
 func updateplayer(pos:Vector2,direction:Player.Direction):
 	player.global_position = pos
 	player.direction = direction

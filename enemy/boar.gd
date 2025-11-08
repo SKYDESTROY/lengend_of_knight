@@ -71,11 +71,11 @@ func getnextstate(state:State) ->int:
 		
 func transitionstate(from:State,to:State) :
 	#调试
-	#print("[%s] %s -> %s" %[
-		#Engine.get_physics_frames(),
-		#State.keys()[from] if from != -1 else "start",
-		#State.keys()[to],
-		#])
+	print("[%s] %s -> %s" %[
+		Engine.get_physics_frames(),
+		State.keys()[from] if from != -1 else "start",
+		State.keys()[to],
+		])
 		
 	match to:
 		State.Idle:

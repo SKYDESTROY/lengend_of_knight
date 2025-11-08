@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=4 uid="uid://dp6fclj68rf1y"]
+[gd_scene load_steps=8 format=4 uid="uid://dp6fclj68rf1y"]
 
 [ext_resource type="Script" uid="uid://baj4npf1pncw6" path="res://world/cave/cave.gd" id="1_270be"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_6vnai"]
+[ext_resource type="AudioStream" uid="uid://t0oxdj7pbauh" path="res://resource/music/27 14 BOSS fixing LOOP.mp3" id="2_34aco"]
 [ext_resource type="TileSet" uid="uid://d063vs6au5e0j" path="res://resource/cave.tres" id="3_pfcw1"]
 [ext_resource type="PackedScene" uid="uid://creuewhm5skff" path="res://object/mine_gate.tscn" id="4_knx1k"]
 [ext_resource type="Script" uid="uid://bgvme0jaboy0u" path="res://class/Entrypoint.gd" id="5_hkk62"]
@@ -9,6 +10,7 @@
 
 [node name="Cave" type="Node2D"]
 script = ExtResource("1_270be")
+bgm = ExtResource("2_34aco")
 metadata/_edit_horizontal_guides_ = [192.0]
 metadata/_edit_vertical_guides_ = [96.0]
 

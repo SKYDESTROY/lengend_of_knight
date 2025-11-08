@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=4 uid="uid://c6oqf028uylpr"]
+[gd_scene load_steps=12 format=4 uid="uid://c6oqf028uylpr"]
 
 [ext_resource type="Script" uid="uid://p0j42rm4arvt" path="res://world/forest/world.gd" id="1_ahbw6"]
+[ext_resource type="AudioStream" uid="uid://8vygegqr4w46" path="res://resource/music/21 11 forest LOOP.mp3" id="2_f3rhm"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_stdse"]
 [ext_resource type="TileSet" uid="uid://gprcdj21o6xb" path="res://resource/worldtileset.tres" id="3_f3rhm"]
 [ext_resource type="PackedScene" uid="uid://creuewhm5skff" path="res://object/mine_gate.tscn" id="4_fjppd"]
@@ -13,6 +14,7 @@
 
 [node name="Forest" type="Node2D"]
 script = ExtResource("1_ahbw6")
+bgm = ExtResource("2_f3rhm")
 metadata/_edit_horizontal_guides_ = [192.0]
 metadata/_edit_vertical_guides_ = [96.0]
 

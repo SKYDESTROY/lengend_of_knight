@@ -298,7 +298,7 @@ func transitionstate(from:State,to:State) :
 			#进入跳跃状态清除跳跃预输入和腾空跳条件，防止剩余时间影响其他状态判断
 			airjumptimer.stop()
 			jumprequsttimer.stop()
-				
+			SoundManager.play_sfx("jump")	
 		State.Falling:
 			animation_player.play("falling")
 			$statedebug.text=str("falling")
@@ -318,6 +318,7 @@ func transitionstate(from:State,to:State) :
 			
 		State.Walljump:
 			animation_player.play("jump")
+			SoundManager.play_sfx("jump")	
 			$statedebug.text=str("walljump")
 			velocity.x = get_wall_normal().x * WALL_JUMP_VELOCITY.x
 			velocity.y = WALL_JUMP_VELOCITY.y
@@ -325,14 +326,17 @@ func transitionstate(from:State,to:State) :
 			#airjumptimer.stop()
 			jumprequsttimer.stop()
 		State.Attack1:
+			SoundManager.play_sfx("attack")
 			animation_player.play("attack1")
 			$statedebug.text = str("A1")
 			iscomborequest = false
 		State.Attack2:
+			SoundManager.play_sfx("attack")
 			animation_player.play("attack2")
 			$statedebug.text = str("A2")
 			iscomborequest = false
 		State.Attack3:
+			SoundManager.play_sfx("attack")
 			animation_player.play("attack3")
 			$statedebug.text = str("A3")	
 			iscomborequest = false	

@@ -11,6 +11,8 @@ var tween :Tween
 
 func _ready() -> void:
 	showline(0)
+	#偷懒写法,导出变量好一些
+	SoundManager.play_bgm(preload("res://resource/music/29 15 game over LOOP.mp3"))
 
 func _input(event: InputEvent) -> void:
 
@@ -39,7 +41,7 @@ func showline(line:int):
 		tween.tween_property(label,"modulate:a",0,1)
 	else :
 		label.modulate.a = 0
-	#bind也是一种匿名函数
+	#bind也是一种匿名函数,可以用来传入不支持引用的数据类型
 	tween.tween_callback(label.set_text.bind(LINES[line]))
 	tween.tween_property(label,"modulate:a",1,0)
 	
