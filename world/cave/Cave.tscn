@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=4 uid="uid://dp6fclj68rf1y"]
+[gd_scene load_steps=9 format=4 uid="uid://dp6fclj68rf1y"]
 
 [ext_resource type="Script" uid="uid://baj4npf1pncw6" path="res://world/cave/cave.gd" id="1_270be"]
 [ext_resource type="PackedScene" uid="uid://bt7ndu4u47x2y" path="res://player.tscn" id="2_6vnai"]
 [ext_resource type="AudioStream" uid="uid://t0oxdj7pbauh" path="res://resource/music/27 14 BOSS fixing LOOP.mp3" id="2_34aco"]
 [ext_resource type="TileSet" uid="uid://d063vs6au5e0j" path="res://resource/cave.tres" id="3_pfcw1"]
 [ext_resource type="PackedScene" uid="uid://creuewhm5skff" path="res://object/mine_gate.tscn" id="4_knx1k"]
+[ext_resource type="Script" uid="uid://ctdnyqxioxq02" path="res://class/camera_2d.gd" id="4_pfxe7"]
 [ext_resource type="Script" uid="uid://bgvme0jaboy0u" path="res://class/Entrypoint.gd" id="5_hkk62"]
 [ext_resource type="PackedScene" uid="uid://bm2cbtwidxw71" path="res://enemy/boar.tscn" id="9_2b72k"]
 
@@ -19,6 +20,7 @@ position = Vector2(72, 144)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2(-1, -16)
+process_callback = 0
 limit_left = -9999530
 limit_top = -10000007
 limit_right = 10000470
@@ -27,6 +29,7 @@ position_smoothing_enabled = true
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 editor_draw_drag_margin = true
+script = ExtResource("4_pfxe7")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 show_behind_parent = true

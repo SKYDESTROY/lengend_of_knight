@@ -1293,3 +1293,4 @@ animation = &"XBOX"
 script = ExtResource("12_ivps1")
 
 [connection signal="hurt" from="graphics/Hurtbox" to="." method="_on_hurtbox_hurt"]
+[connection signal="hit" from="graphics/Hitbox" to="." method="_on_hitbox_hit"]

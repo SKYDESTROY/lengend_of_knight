@@ -347,6 +347,7 @@ func transitionstate(from:State,to:State) :
 		State.Hurt:
 			animation_player.play("hurt")
 			Input.start_joy_vibration(0,0,0.8,0.3)
+			Game.shake_camera(4)
 			$statedebug.text=str("hurt")
 			#同猪
 			states.health -= pendingdamage.amount
@@ -383,3 +384,10 @@ func _on_hurtbox_hurt(hitbox: Hitbox) -> void:
 	pendingdamage = Damage.new()
 	pendingdamage.amount = 1
 	pendingdamage.source = hitbox.owner
+
+
+func _on_hitbox_hit(hurtbox: Variant) -> void:
+	Game.shake_camera(2)
+	Engine.time_scale = 0.01
+	await get_tree().create_timer(0.05,true,false,true).timeout
+	Engine.time_scale = 1
